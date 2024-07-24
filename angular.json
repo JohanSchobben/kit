@@ -100,6 +100,11 @@
     },
     "ng-kit": {
       "projectType": "library",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
       "root": "projects/ng-kit",
       "sourceRoot": "projects/ng-kit/src",
       "prefix": "kit",
