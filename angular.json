@@ -12,7 +12,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "kit",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
@@ -102,7 +102,7 @@
       "projectType": "library",
       "root": "projects/ng-kit",
       "sourceRoot": "projects/ng-kit/src",
-      "prefix": "lib",
+      "prefix": "kit",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
