@@ -11,6 +11,9 @@
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "paths": {
+      "ng-kit/tooltip": [
+        "./dist/ng-kit/tooltip"
+      ],
       "ng-kit": [
         "./dist/ng-kit"
       ]
