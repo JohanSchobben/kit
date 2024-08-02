@@ -1,6 +1,16 @@
-import {Directive, ElementRef, Inject, Input, OnDestroy, Optional} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Inject,
+  input,
+  Input, numberAttribute,
+  OnChanges,
+  OnDestroy, OnInit,
+  Optional,
+  SimpleChanges
+} from '@angular/core';
 import {Overlay, OverlayRef, ScrollDispatcher} from "@angular/cdk/overlay";
-import {Subject, takeUntil} from "rxjs";
+import {debounce, debounceTime, fromEvent, map, Subject, switchMap, takeUntil, timer} from "rxjs";
 import {hasModifierKey} from "@angular/cdk/keycodes";
 import {TooltipComponent} from "./tooltip.component";
 import {ComponentPortal} from "@angular/cdk/portal";
@@ -10,18 +20,19 @@ import {KIT_TOOLTIP_OPTIONS} from "./tooltip-token";
 @Directive({
   selector: '[kitTooltip]',
   host: {
-    "(mouseenter)": "onMouseenter()",
-    "(mouseleave)": "onMouseleave()",
     "[attr.aria-describedby]": "tooltipId"
   }
 })
-export class TooltipDirective implements OnDestroy {
+export class TooltipDirective implements OnDestroy, OnChanges, OnInit {
   private overlayRef?: OverlayRef;
   private destroy: Subject<void> = new Subject<void>();
   protected tooltip?: TooltipComponent;
   private _message?: string;
   private portal?: ComponentPortal<TooltipComponent>;
   private _className?: string;
+
+  @Input({alias: "kitTooltipDelay", transform: numberAttribute})
+  public delay?: number;
 
   @Input("kitTooltip")
   set message(message: string) {
@@ -31,13 +42,50 @@ export class TooltipDirective implements OnDestroy {
     }
   }
 
-
   constructor(
     private el: ElementRef,
     private overlay: Overlay,
     private scrollDispatcher: ScrollDispatcher,
     @Optional() @Inject(KIT_TOOLTIP_OPTIONS) private options: KitTooltipOptions
   ) {
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes["delay"] && !changes["delay"].firstChange) {
+      console.warn("You are changing the delay on an already initialized tooltip, this is not possible.");
+    }
+  }
+
+  public ngOnInit() {
+    const mouseenter$ = fromEvent<MouseEvent>(this.el.nativeElement, "mouseenter");
+    const mouseLeave$ = fromEvent<MouseEvent>(this.el.nativeElement, "mouseleave");
+    const delay = this.delay ?? this.options.delay ?? 0;
+
+    mouseenter$
+      .pipe(
+        takeUntil(this.destroy),
+        switchMap((event: MouseEvent) =>
+          timer(delay)
+            .pipe(
+              takeUntil(mouseLeave$),
+              map(() => event)
+            ))
+      ).subscribe(() => {
+        this.show()
+    });
+
+    mouseLeave$
+      .pipe(
+        takeUntil(this.destroy),
+        switchMap((event: MouseEvent) =>
+          timer(delay)
+            .pipe(
+              takeUntil(mouseenter$),
+              map(() => event)
+            ))
+      ).subscribe(() => {
+      this.hide();
+    });
   }
 
   public get tooltipId(): string {

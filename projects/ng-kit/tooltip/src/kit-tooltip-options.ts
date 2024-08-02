@@ -1,3 +1,4 @@
-export type  KitTooltipOptions = {
+export type KitTooltipOptions = {
   className?: string;
+  delay?: number;
 }
