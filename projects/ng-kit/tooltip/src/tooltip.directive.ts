@@ -2,7 +2,6 @@ import {
   Directive,
   ElementRef,
   Inject,
-  input,
   Input, numberAttribute,
   OnChanges,
   OnDestroy, OnInit,
