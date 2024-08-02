@@ -1,9 +1,11 @@
-import {Directive, ElementRef, Input, OnDestroy} from '@angular/core';
+import {Directive, ElementRef, Inject, Input, OnDestroy, Optional} from '@angular/core';
 import {Overlay, OverlayRef, ScrollDispatcher} from "@angular/cdk/overlay";
 import {Subject, takeUntil} from "rxjs";
 import {hasModifierKey} from "@angular/cdk/keycodes";
 import {TooltipComponent} from "./tooltip.component";
 import {ComponentPortal} from "@angular/cdk/portal";
+import {KitTooltipOptions} from "./kit-tooltip-options";
+import {KIT_TOOLTIP_OPTIONS} from "./tooltip-token";
 
 @Directive({
   selector: '[kitTooltip]',
@@ -19,6 +21,7 @@ export class TooltipDirective implements OnDestroy {
   protected tooltip?: TooltipComponent;
   private _message?: string;
   private portal?: ComponentPortal<TooltipComponent>;
+  private _className?: string;
 
   @Input("kitTooltip")
   set message(message: string) {
@@ -32,12 +35,25 @@ export class TooltipDirective implements OnDestroy {
   constructor(
     private el: ElementRef,
     private overlay: Overlay,
-    private scrollDispatcher: ScrollDispatcher
+    private scrollDispatcher: ScrollDispatcher,
+    @Optional() @Inject(KIT_TOOLTIP_OPTIONS) private options: KitTooltipOptions
   ) {
   }
 
   public get tooltipId(): string {
     return this.tooltip?.id ?? '';
+  }
+
+  public get className(): string {
+    return this._className ?? this.options.className ?? '';
+  }
+
+  @Input("kitTooltipClass")
+  public set className(className: string) {
+    this._className = className;
+    if (this.tooltip) {
+      this.tooltip.tooltipClass = className;
+    }
   }
 
   private createOverlay(): OverlayRef {
@@ -113,6 +129,7 @@ private hide() {
     const component = overlay.attach(portal);
     this.tooltip = component.instance;
     this.tooltip.message = this._message;
+    this.tooltip.tooltipClass = this.className;
   }
 
   protected onMouseenter(): void {

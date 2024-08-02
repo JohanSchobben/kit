@@ -7,9 +7,12 @@ import {Component, Input} from '@angular/core';
   host: {
     "[id]": "id",
     "attr.aria-role": "tooltip",
+    "[class]": "tooltipClass"
   }
 })
 export class TooltipComponent {
+  @Input()
+  tooltipClass?: string;
   @Input() message?: string;
   private static tooltipCount = 0;
   public readonly id = `tooltip-${++TooltipComponent.tooltipCount}`;
