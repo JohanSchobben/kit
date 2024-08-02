@@ -117,7 +117,8 @@ private hide() {
     const overlay = this.createOverlay();
     const portal = this.portal ?? this.createPortal();
     const component = overlay.attach(portal);
-    component.instance.message = this._message;
+    this.tooltip = component.instance;
+    this.tooltip.message = this._message;
     setTimeout(() => {debugger}, 1000)
   }
 

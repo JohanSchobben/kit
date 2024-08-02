@@ -5,7 +5,8 @@ import {Component, Input} from '@angular/core';
   templateUrl: './tooltip.component.html',
   styleUrl: './tooltip.component.scss',
   host: {
-    "[id]": "id"
+    "[id]": "id",
+    "attr.aria-role": "tooltip",
   }
 })
 export class TooltipComponent {
