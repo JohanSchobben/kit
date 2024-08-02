@@ -9,7 +9,7 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {Overlay, OverlayRef, ScrollDispatcher} from "@angular/cdk/overlay";
-import {debounce, debounceTime, fromEvent, map, Subject, switchMap, takeUntil, timer} from "rxjs";
+import {fromEvent, map, Subject, switchMap, takeUntil, timer} from "rxjs";
 import {hasModifierKey} from "@angular/cdk/keycodes";
 import {TooltipComponent} from "./tooltip.component";
 import {ComponentPortal} from "@angular/cdk/portal";

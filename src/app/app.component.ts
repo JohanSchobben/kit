@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {TooltipModule} from "ng-kit/tooltip";
 
@@ -9,6 +9,8 @@ import {TooltipModule} from "ng-kit/tooltip";
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'ng-kit-app';
+  public ngOnInit() {
+  }
 }
