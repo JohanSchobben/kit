@@ -4,7 +4,6 @@ import {Subject, takeUntil} from "rxjs";
 import {hasModifierKey} from "@angular/cdk/keycodes";
 import {TooltipComponent} from "./tooltip.component";
 import {ComponentPortal} from "@angular/cdk/portal";
-import {debug} from "ng-packagr/lib/utils/log";
 
 @Directive({
   selector: '[kitTooltip]',
@@ -64,11 +63,6 @@ export class TooltipDirective implements OnDestroy {
       .withViewportMargin(0)
       .withScrollableContainers(scrollableContainer);
 
-    strategy.positionChanges.subscribe((changes) => {
-      if (this.overlayRef) {
-        this.overlayRef.addPanelClass("kit-tooltip-position-above");
-      }
-    });
 
     this.overlayRef = this.overlay.create({
       direction: "ltr",
@@ -119,11 +113,10 @@ private hide() {
     const component = overlay.attach(portal);
     this.tooltip = component.instance;
     this.tooltip.message = this._message;
-    setTimeout(() => {debugger}, 1000)
   }
 
   protected onMouseenter(): void {
-    setTimeout(() => this.show())
+    this.show()
   }
 
   protected onMouseleave() {
